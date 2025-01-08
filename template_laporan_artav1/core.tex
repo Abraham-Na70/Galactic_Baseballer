@@ -1,0 +1,197 @@
+\documentclass[a4paper,11pt]{report}
+%\usepackage[none]{hyphenat}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[bitstream-charter]{mathdesign}
+
+%\usepackage[usenames,dvipsnames,pdf]{pstricks}
+%\usepackage[crop=off]{auto-pst-pdf}
+\usepackage{makeidx}
+\usepackage{url}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{framed}
+
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+\usepackage[noend,ruled,noline,linesnumbered,algochapter]{algorithm2e}
+
+\usepackage[linktoc=page]{hyperref}
+\usepackage[margin=3cm]{geometry}
+\usepackage{setspace} 
+
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+
+\definecolor{lightbrown}{RGB}{255,248,220} % A light cream color
+\definecolor{numbercolor}{RGB}{100,100,100} % Color for line numbers
+
+\newtcblisting{codebox}{
+  colback=lightbrown,
+  colframe=brown!50!black,
+  listing only,
+  listing options={
+    language=SQL,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    basicstyle=\ttfamily\footnotesize,
+    columns=flexible,
+    keepspaces=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny\color{numbercolor},
+    stepnumber=1,
+    numbersep=5pt,
+    firstnumber=1,
+    numberblanklines=true,
+  },
+  title= Code,
+  arc=0pt,
+  boxrule=0.5pt,
+  left=6mm,
+  right=6mm,
+  top=6mm,
+  bottom=6mm,
+  breakable,
+  enhanced,
+  before skip=2mm,
+  after skip=3mm,
+  colframe=brown!50!black,
+  fonttitle=\bfseries,
+  lefttitle=10mm, % Adjust title position to accommodate line numbers
+}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}  % Clear all headers
+\fancyfoot{}  % Clear all footers
+\fancyfoot[L]{Departmen Teknik Komputer - ITS \textcopyright{} 2024 }  % Left footer
+\fancyfoot[R]{\thepage}  % Right footer for page number
+\renewcommand{\headrulewidth}{0pt}  % Remove header rule
+\renewcommand{\footrulewidth}{0.4pt}  % Add footer rule
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[L]{Departmen Teknik Komputer - ITS \textcopyright{} 2024}  % Left footer
+  \fancyfoot[R]{\thepage}  % Right footer for page number
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+\makeindex
+
+\onehalfspacing 
+
+\renewcommand*\contentsname{Daftar Isi}
+\renewcommand{\listfigurename}{Daftar Gambar}  % Add this line
+\renewcommand{\listtablename}{Daftar Tabel}
+\renewcommand{\chaptername}{Final Project}  % Add this line
+
+
+\begin{document}
+
+\pagenumbering{roman}
+
+%title page
+\input{0.0.title.tex}
+
+
+%\clearpage
+%\thispagestyle{empty}
+%\mbox{}
+\clearpage
+
+%\thispagestyle{empty}
+%Dedication
+%I would like to dedicate this thesis to my loving family ...
+    
+
+
+
+%\clearpage
+%\thispagestyle{empty}
+%\mbox{}
+%\clearpage
+%\thispagestyle{empty}
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\clearpage
+\phantomsection
+\tableofcontents
+\renewcommand{\contentsname}{Daftar Isi}
+\addcontentsline{toc}{chapter}{Daftar Isi}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Daftar Gambar}
+\listoffigures
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Daftar Tabel}
+\listoftables
+
+
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\renewcommand\bibname{Daftar Pustaka}
+
+\clearpage
+\phantomsection
+
+
+\input{bab_1}
+\input{bab_2}
+
+
+%\bibliographystyle{unsrt}
+%\bibliography{fydp}
+%\addcontentsline{toc}{chapter}{Daftar Pustaka}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Daftar Pustaka}
+\renewcommand{\bibname}{Daftar Pustaka}
+
+\begin{thebibliography}{99}
+
+\bibitem{mongodb} MongoDB, Inc., 2024. MongoDB Documentation. [online] Available at: \url{https://docs.mongodb.com/} [Accessed August 2024].
+
+\bibitem{redis} Redis Ltd., 2024. Redis Documentation. [online] Available at: \url{https://redis.io/documentation/} [Accessed August 2024].
+
+\bibitem{influxdb} InfluxData Inc., 2024. InfluxDB Documentation. [online] Available at: \url{https://docs.influxdata.com/} [Accessed August 2024].
+
+% Add more references as needed
+\end{thebibliography}
+
+
+\clearpage
+%\appendix 
+
+%\phantomsection
+
+%\addcontentsline{toc}{chapter}{Appendices}
+%\chapter{Amino Acids\label{appAmino}}
+%\begin{figure}[h]
+%\begin{center}
+%\includegraphics[width=1\textwidth]{./images/background/aminoacids}
+%\end{center}
+%\caption{Twenty different amino acids, their structures and chemical properties.\index{Amino Acid!chemical properties}\cite{Lehninger2012}.}
+%\end{figure}
+%\clearpage
+%\thispagestyle{empty}
+%\mbox{}
+
+%\clearpage
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Index}
+%\printindex
+
+\end{document}

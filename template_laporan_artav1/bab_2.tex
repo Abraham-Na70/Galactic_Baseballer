@@ -1,0 +1,124 @@
+\chapter{Time Series Database Praktikum}
+
+As shown in Table \ref{tab:example-table}, the data illustrates...
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Column 1 & Column 2 & Column 3 & Column 4 \\
+        \hline
+        Row 1, Col 1 & Row 1, Col 2 & Row 1, Col 3 & Row 1, Col 4 \\
+        Row 2, Col 1 & Row 2, Col 2 & Row 2, Col 3 & Row 2, Col 4 \\
+        Row 3, Col 1 & Row 3, Col 2 & Row 3, Col 3 & Row 3, Col 4 \\
+        \hline
+    \end{tabular}
+    \caption{Example table with 4 columns and 3 rows}
+    \label{tab:example-table}
+\end{table}
+
+\section{Tujuan}
+Mengenalkan konsep dan aplikasi time series database.
+
+\section{Dasar Teori}
+\begin{itemize}
+    \item Konsep time series data
+    \item Use cases IoT data
+\end{itemize}
+
+\section{Alat dan Bahan}
+\begin{itemize}
+    \item InfluxDB (untuk time series)
+\end{itemize}
+
+\section{Prosedur}
+\begin{enumerate}
+    \item Instalasi dan konfigurasi database
+    \item Ingestion data time series
+    \item Query dan analisis data time series
+\end{enumerate}
+
+\section{Skenario: Monitoring Suhu Ruangan dengan InfluxDB}
+Anda akan mengimplementasikan sistem monitoring suhu untuk beberapa ruangan dalam sebuah gedung menggunakan InfluxDB.
+
+\subsection{Langkah-langkah}
+
+\subsubsection{Instalasi dan Konfigurasi InfluxDB (10 menit)}
+\begin{itemize}
+    \item Pastikan InfluxDB terinstal
+    \item Buka InfluxDB CLI atau UI
+\end{itemize}
+
+\subsubsection{Membuat Database dan Retention Policy (5 menit)}
+\begin{codebox}[language=SQL]
+CREATE DATABASE room_temp
+USE room_temp
+CREATE RETENTION POLICY "one_week" ON "room_temp" DURATION 1w REPLICATION 1 DEFAULT
+\end{codebox}
+
+\subsubsection{Ingestion Data (15 menit)}
+Gunakan Python dengan library \texttt{influxdb-client}:
+
+\begin{codebox}[language=Python]
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+import random
+from datetime import datetime, timedelta
+
+client = InfluxDBClient(url="http://localhost:8086", token="your-token", org="your-org")
+write_api = client.write_api(write_options=SYNCHRONOUS)
+
+# Simulasi data suhu untuk 3 ruangan selama 24 jam
+start_time = datetime.now() - timedelta(days=1)
+for i in range(288):  # 5 menit interval selama 24 jam
+    for room in ["Room A", "Room B", "Room C"]:
+        point = Point("temperature") \
+            .tag("room", room) \
+            .field("value", random.uniform(20.0, 30.0)) \
+            .time(start_time + timedelta(minutes=5*i))
+        write_api.write(bucket="room_temp", record=point)
+
+print("Data ingestion complete")
+\end{codebox}
+
+\subsubsection{Query dan Analisis (15 menit)}
+Gunakan InfluxDB Query Language (InfluxQL) atau Flux:
+
+\begin{codebox}[language=SQL]
+-- Rata-rata suhu per ruangan dalam 24 jam terakhir
+SELECT mean("value") FROM "temperature" WHERE time > now() - 24h GROUP BY "room"
+
+-- Suhu maksimum per ruangan
+SELECT max("value") FROM "temperature" GROUP BY "room"
+
+-- Jumlah pengukuran di atas 25°C per ruangan
+SELECT count("value") FROM "temperature" WHERE "value" > 25 GROUP BY "room"
+\end{codebox}
+
+\subsubsection{Visualisasi (optional, 10 menit)}
+\begin{itemize}
+    \item Gunakan Grafana atau library plotting Python untuk memvisualisasikan data suhu dari waktu ke waktu.
+\end{itemize}
+
+\section{Analisis dan Diskusi (20 menit)}
+
+\subsection{Time Series Database (InfluxDB)}
+\begin{itemize}
+    \item Kelebihan dalam menangani data temporal dengan volume besar
+    \item Efisiensi query untuk analisis time-based
+    \item Use cases: IoT, monitoring sistem, analisis keuangan
+\end{itemize}
+
+\subsection{Perbandingan dengan RDBMS tradisional}
+\begin{itemize}
+    \item Diskusikan bagaimana implementasi serupa akan berbeda/lebih sulit di RDBMS
+    \item Bahas trade-offs antara fleksibilitas RDBMS dan kinerja spesifik dari database khusus ini
+\end{itemize}
+
+\section{Instruksi untuk Instruktur}
+\begin{itemize}
+    \item Pastikan InfluxDB tersedia untuk semua mahasiswa
+    \item Sediakan environment Python dengan library yang diperlukan
+    \item Dorong mahasiswa untuk bereksperimen dengan query dan parameter berbeda
+    \item Tekankan pada konsep kunci seperti time-based analysis untuk InfluxDB
+\end{itemize}

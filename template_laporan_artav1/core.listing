@@ -1,0 +1,9 @@
+[language=SQL]
+-- Rata-rata suhu per ruangan dalam 24 jam terakhir
+SELECT mean("value") FROM "temperature" WHERE time > now() - 24h GROUP BY "room"
+
+-- Suhu maksimum per ruangan
+SELECT max("value") FROM "temperature" GROUP BY "room"
+
+-- Jumlah pengukuran di atas 25°C per ruangan
+SELECT count("value") FROM "temperature" WHERE "value" > 25 GROUP BY "room"

@@ -1,0 +1,8 @@
+
+entity1 reduced HP even when the ball stopped because of grounded ball
+Power up list
+Triangle = it will give double damage
+Square = it will give sluggish paddle movement upon inflicted
+Pentagon = it will give damage over turn (-1 HP each turn, for 2 turns, including hits)
+Hexagon = it will give the ball a smaller hitbox (harder to deflect)
+all buff's/power up will only last 7 seconds upon ball hitting the random polygons

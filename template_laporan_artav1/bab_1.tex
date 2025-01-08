@@ -1,0 +1,204 @@
+\chapter{Document Database (MongoDB) dan Key-Value Store (Redis)}
+
+As shown in Figure \ref{fig:ce-logo}, the logo represents...
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=0.035]{./ce-logo}
+        \caption{Caption describing the logo}
+        \label{fig:ce-logo}
+    \end{center}
+\end{figure}
+
+\section{Tujuan}
+Memahami konsep dan penggunaan document database dan key-value store.
+
+\section{Dasar Teori}
+\begin{itemize}
+    \item Konsep NoSQL
+    \item Karakteristik document database dan key-value store
+    \item Use cases untuk MongoDB dan Redis
+\end{itemize}
+
+\section{Alat dan Bahan}
+\begin{itemize}
+    \item MongoDB dan Redis
+    \item MongoDB Compass dan Redis CLI/Desktop Manager
+\end{itemize}
+
+\section{Prosedur}
+
+\subsection{Bagian 1: MongoDB}
+\begin{itemize}
+    \item Instalasi dan konfigurasi MongoDB
+    \item CRUD operations pada document
+    \item Querying dan indexing di MongoDB
+\end{itemize}
+
+\subsection{Bagian 2: Redis}
+\begin{itemize}
+    \item Instalasi dan konfigurasi Redis
+    \item Operasi dasar Redis (SET, GET, DEL, etc.)
+    \item Implementasi caching sederhana
+    \item Penggunaan struktur data Redis (Lists, Sets, Hashes)
+\end{itemize}
+
+\section{Skenario}
+\begin{enumerate}
+    \item MongoDB digunakan untuk menyimpan konten blog yang memiliki struktur fleksibel (judul, konten, tag, dll).
+    \item Redis digunakan untuk menghitung view, menyimpan daftar post populer, dan caching konten.
+\end{enumerate}
+
+\section{Instruksi Praktikum}
+\begin{enumerate}
+    \item Mulai dengan MongoDB:
+    \begin{itemize}
+        \item Implementasikan operasi CRUD untuk post blog.
+        \item Eksperimen dengan query berbasis tag dan sorting.
+    \end{itemize}
+    \item Lanjutkan dengan Redis:
+    \begin{itemize}
+        \item Implementasikan penghitung view menggunakan inkremen.
+        \item Buat leaderboard post terpopuler dengan sorted set.
+        \item Implementasikan sistem caching sederhana.
+    \end{itemize}
+    \item Analisis:
+    \begin{itemize}
+        \item Bandingkan kecepatan operasi antara MongoDB, Redis, dan RDBMS yang telah dipelajari sebelumnya.
+        \item Diskusikan skenario di mana masing-masing teknologi paling cocok digunakan.
+    \end{itemize}
+\end{enumerate}
+
+\section{Implementasi}
+
+\subsection{Bagian 1: MongoDB - Manajemen Konten Blog}
+
+\subsubsection{Koneksi ke MongoDB}
+
+\begin{codebox}
+from pymongo import MongoClient
+
+client = MongoClient('mongodb://localhost:27017/')
+db = client['blog_db']
+posts = db['posts']
+\end{codebox}
+
+\subsubsection{Membuat Post Baru}
+
+\begin{codebox}
+new_post = {
+    "title": "Pengenalan NoSQL",
+    "content": "NoSQL adalah jenis database yang...",
+    "author": "John Doe",
+    "tags": ["database", "nosql", "tutorial"],
+    "date": datetime.now()
+}
+result = posts.insert_one(new_post)
+print(f"Post baru dibuat dengan ID: {result.inserted_id}")
+\end{codebox}
+
+\subsubsection{Mencari Post}
+
+\begin{codebox}
+# Mencari berdasarkan tag
+for post in posts.find({"tags": "nosql"}):
+    print(f"Judul: {post['title']}")
+
+# Mencari dan sort berdasarkan tanggal
+for post in posts.find().sort("date", -1).limit(5):
+    print(f"Judul: {post['title']}, Tanggal: {post['date']}")
+\end{codebox}
+
+\subsubsection{Update Post}
+
+\begin{codebox}
+posts.update_one(
+    {"title": "Pengenalan NoSQL"},
+    {"$set": {"content": "NoSQL adalah jenis database yang fleksibel..."}}
+)
+\end{codebox}
+
+\subsubsection{Menghapus Post}
+
+\begin{codebox}
+posts.delete_one({"title": "Pengenalan NoSQL"})
+\end{codebox}
+
+\subsection{Bagian 2: Redis - Caching View Count}
+
+\subsubsection{Koneksi ke Redis}
+
+\begin{codebox}
+import redis
+
+r = redis.Redis(host='localhost', port=6379, db=0)
+\end{codebox}
+
+\subsubsection{Increment View Count}
+
+\begin{codebox}
+def increment_view(post_id):
+    key = f"post:{post_id}:views"
+    return r.incr(key)
+
+# Simulasi view
+post_id = "12345"
+views = increment_view(post_id)
+print(f"Post {post_id} telah dilihat {views} kali")
+\end{codebox}
+
+\subsubsection{Get Top Posts}
+
+\begin{codebox}
+def get_top_posts(limit=5):
+    # Asumsikan kita menyimpan skor dalam sorted set
+    return r.zrevrange("top_posts", 0, limit-1, withscores=True)
+
+# Simulasi update top posts
+r.zadd("top_posts", {"post:12345": 10, "post:67890": 15})
+
+top_posts = get_top_posts()
+for post, score in top_posts:
+    print(f"Post {post.decode()} memiliki {int(score)} views")
+\end{codebox}
+
+\subsubsection{Caching Konten Post}
+
+\begin{codebox}
+def get_post_content(post_id):
+    cache_key = f"post:{post_id}:content"
+    content = r.get(cache_key)
+    if content:
+        return content.decode()
+    else:
+        # Simulasi mengambil dari MongoDB
+        content = "Ini adalah konten post yang diambil dari MongoDB"
+        r.setex(cache_key, 3600, content)  # Cache selama 1 jam
+        return content
+
+content = get_post_content("12345")
+print(f"Konten post: {content}")
+\end{codebox}
+
+\section{Analisis}
+
+\subsection{MongoDB}
+\begin{itemize}
+    \item Fleksibel untuk menyimpan struktur data yang kompleks (nested documents, arrays).
+    \item Baik untuk data yang sering berubah strukturnya.
+    \item Query yang powerful untuk pencarian dan aggregasi.
+\end{itemize}
+
+\subsection{Redis}
+\begin{itemize}
+    \item Sangat cepat untuk operasi read/write sederhana.
+    \item Ideal untuk caching, counting, dan leaderboards.
+    \item Struktur data yang beragam memungkinkan implementasi fitur seperti rate limiting, session management.
+\end{itemize}
+
+\subsection{Perbandingan dengan RDBMS}
+\begin{itemize}
+    \item MongoDB lebih fleksibel dalam skema dibanding RDBMS, cocok untuk rapid development.
+    \item Redis jauh lebih cepat untuk operasi sederhana, tapi tidak cocok untuk query kompleks.
+    \item RDBMS lebih baik untuk data yang memerlukan integritas referensial yang ketat.
+\end{itemize}
