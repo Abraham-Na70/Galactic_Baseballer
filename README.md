@@ -88,7 +88,7 @@ Ensure you have the following installed on your system:
 
 First, clone the project repository to your local machine:
 
-git clone https://github.com/Abraham-Na70/Your-Repo-Name.git  
+git clone https://github.com/Abraham-Na70/Galactic_Baseballer.git  
 cd Your-Repo-Name
 
 *(Note: Replace Your-Repo-Name with the actual name of your repository).*
@@ -165,7 +165,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## **Acknowledgements**
 
-* **Developer:** [Abraham-Na70](https://github.com/Abraham-Na70/Galactic_Baseballer.git)  
+* **Developer:** [Abraham-Na70]()  
 * **Core Technology:** A huge thank you to [Ramon Santamaria](https://github.com/raysan5) for creating and maintaining the fantastic [Raylib library](https://www.raylib.com/).  
 * **Assets:** Visual assets used in this project were sourced from various packs, including:  
   * *SBS \- 2D Planet Pack*  
