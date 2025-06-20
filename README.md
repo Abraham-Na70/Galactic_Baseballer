@@ -91,7 +91,6 @@ First, clone the project repository to your local machine:
 git clone https://github.com/Abraham-Na70/Galactic_Baseballer.git  
 cd Your-Repo-Name
 
-*(Note: Replace Your-Repo-Name with the actual name of your repository).*
 
 ### **2\. Build the Game**
 
@@ -138,7 +137,7 @@ Below are placeholders for screenshots of the game in action.
 
 *(Placeholder: A screenshot of the main gameplay, showing both players, the ball in mid-air, and the UI.)*
 
-*(Placeholder: A screenshot of the Game Over screen, showing the winner and the rematch/exit buttons.)*
+![Final Dashboard Layout](Game2.png)
 
 ## **Troubleshooting**
 
